@@ -53,8 +53,8 @@ const Page = () => {
           </h2>
           <ul>
             {data.items.map((item: any, index: number) => (
-              <div>
-                <li key={index}>
+              <div key={index}>
+                <li>
                   <a
                     href={item.html_url}
                     target="_blank"
