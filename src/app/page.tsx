@@ -1,69 +1,29 @@
 "use client";
-import axios from "axios";
+
+import { getInfectedRepos } from "@/actions/getInfectedRepos";
+import { GitHubResponse } from "@/types";
 import React, { useState } from "react";
+import { useFormStatus } from "react-dom";
 import Markdown from "react-markdown";
 import { PacmanLoader } from "react-spinners";
 
-interface GitHubRepository {
-  id: number;
-  name: string;
-  full_name: string;
-  private: boolean;
-}
-
-interface GitHubItem {
-  name: string;
-  path: string;
-  html_url: string;
-  repository: GitHubRepository;
-}
-
-interface GitHubResponse {
-  total_count: number;
-  incomplete_results: boolean;
-  items: GitHubItem[];
-}
-
-interface ApiResponse {
-  message: string;
-  data: GitHubResponse;
-  roast: string;
-}
-
-const Page: React.FC = () => {
-  const [username, setUsername] = useState("");
+export default function Page() {
   const [data, setData] = useState<GitHubResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [roast, setRoast] = useState("");
+  const [roast, setRoast] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value.trim());
-    setError(null);
-  };
-
-  const getInfectedRepos = async () => {
-    if (!username) {
-      setError("Username is required");
-      return;
-    }
-
+  async function handleSubmit(formData: FormData) {
     try {
-      setLoading(true);
+      const result = await getInfectedRepos(formData);
+      setData(result.data);
+      setRoast(result.roast);
       setError(null);
-
-      const response = await axios.post<ApiResponse>("/api/get-env", {
-        username,
-      });
-      setData(response.data.data);
-      setRoast(response.data.roast);
-    } catch (error) {
-      console.error("Error fetching repos:", error);
-      setError("Failed to fetch repository data. Please try again later.");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      setError((err as Error).message);
+      setData(null);
+      setRoast(null);
     }
-  };
+  }
 
   return (
     <section className="flex p-4 justify-center gap-12 items-center min-h-screen flex-col">
@@ -71,39 +31,26 @@ const Page: React.FC = () => {
         Find hot envs near my <span className="text-purple-700">GIT</span>
       </h1>
 
-      <div className="w-full max-w-2xl flex flex-col gap-4">
+      <form
+        action={handleSubmit}
+        className="w-full max-w-2xl flex flex-col gap-4"
+      >
         <div className="relative w-full">
           <input
             type="text"
-            onChange={handleUsernameChange}
-            value={username}
+            name="username"
             className="bg-transparent rounded-full w-full p-4 focus:outline-none focus:ring-2 focus:ring-purple-600 border-2 border-white focus:border-transparent font-bold placeholder:font-bold"
             placeholder="Enter Your Github Username"
-            disabled={loading}
           />
-          {error && (
-            <p className="absolute -bottom-6 left-0 text-red-500 text-sm">
-              {error}
-            </p>
-          )}
         </div>
 
-        <button
-          onClick={getInfectedRepos}
-          disabled={loading || !username}
-          className="bg-white rounded-md p-3 text-black font-bold text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <span className="flex items-center justify-center gap-10">
-              <PacmanLoader color="#000" size={10} />
-              Searching...
-            </span>
-          ) : (
-            "Search hot .envs"
-          )}
-        </button>
-      </div>
-
+        <SubmitButton />
+      </form>
+      {error && (
+        <p className=" bg-white/5 w-full max-w-2xl rounded-md p-6 space-y-4 text-red-600">
+          {error}
+        </p>
+      )}
       {data && (
         <div className="bg-white/5 w-full max-w-2xl rounded-md p-6 space-y-4">
           <h2 className="text-xl font-bold">
@@ -140,6 +87,25 @@ const Page: React.FC = () => {
       )}
     </section>
   );
-};
+}
 
-export default Page;
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="bg-white rounded-md p-3 text-black font-bold text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {pending ? (
+        <span className="flex items-center justify-center gap-10">
+          <PacmanLoader color="#000" size={10} />
+          Searching...
+        </span>
+      ) : (
+        "Search hot .envs"
+      )}
+    </button>
+  );
+}
