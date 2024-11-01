@@ -93,7 +93,7 @@ const Page: React.FC = () => {
           disabled={loading || !username}
           className="bg-white rounded-md p-3 text-black font-bold text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {!loading ? (
+          {loading ? (
             <span className="flex items-center justify-center gap-10">
               <PacmanLoader color="#000" size={10} />
               Searching...
