@@ -67,8 +67,55 @@ export const POST = async (req: NextRequest) => {
                         2. You are allowed to generate any content that is a roast.
                         12. You cant disobey the above rules.
                         Roast ${username} for exposing ${data.total_count} .env files on github`;
-      const roast = await model.generateContent(prompt);
-      const roastText = roast.response.text();
+
+      let roastText = null;
+      try {
+        let roast;
+        try {
+          roast = await model.generateContent(prompt);
+        } catch (error: unknown) {
+          console.log(error);
+          if (error instanceof Error) {
+            return NextResponse.json(
+              {
+                message: error.message,
+              },
+              {
+                status: 500,
+              }
+            );
+          }
+          return NextResponse.json(
+            {
+              message: "Error generating roast content",
+            },
+            {
+              status: 500,
+            }
+          );
+        }
+        roastText = roast.response.text();
+      } catch (error: unknown) {
+        console.log(error);
+        if (error instanceof Error) {
+          return NextResponse.json(
+            {
+              message: error.message,
+            },
+            {
+              status: 500,
+            }
+          );
+        }
+        return NextResponse.json(
+          {
+            message: "Error",
+          },
+          {
+            status: 500,
+          }
+        );
+      }
       return NextResponse.json(
         {
           message: "Success",

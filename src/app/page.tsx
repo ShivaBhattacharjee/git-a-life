@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
+import Markdown from "react-markdown";
 
 const Page = () => {
   const [username, setUsername] = useState<string>("");
@@ -21,7 +22,7 @@ const Page = () => {
     } catch (error) {
       console.log(error);
       alert(
-        "Github so bad even your apis refused to answer please dont try again"
+        "Github so bad even our apis refused to answer please dont try again"
       );
     } finally {
       setLoading(false);
@@ -51,23 +52,21 @@ const Page = () => {
           <h2>
             Total number of times you had skill issues: {data.total_count}
           </h2>
+          <h1>Code Review</h1>
           <ul>
             {data.items.map((item: any, index: number) => (
-              <div key={index}>
-                <li>
-                  <a
-                    href={item.html_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {item.name} in {item.repository.full_name}
-                  </a>
-                </li>
-
-                <h1>Code Review</h1>
-                <h1>{roast}</h1>
-              </div>
+              <li key={index} className="my-2">
+                <a
+                  href={item.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500"
+                >
+                  {item.name} in {item.repository.full_name}
+                </a>
+              </li>
             ))}
+            <Markdown className="mt-2">{roast}</Markdown>
           </ul>
         </div>
       )}
