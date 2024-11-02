@@ -12,7 +12,11 @@ interface ApiResponse {
 export async function getInfectedRepos(formData: FormData) {
   const username = formData.get("username") as string;
   if (!username) {
-    throw new Error("Username is required");
+    return {
+      message: "Please enter a username",
+      data: null,
+      roast: null,
+    };
   }
 
   try {
@@ -25,8 +29,11 @@ export async function getInfectedRepos(formData: FormData) {
     return response.data;
   } catch (error) {
     console.error("Error fetching repos:", error);
-    throw new Error(
-      "Github account so bad even our servers refused to process your data"
-    );
+    return {
+      message:
+        "Github account so bad even our servers refused to process your data",
+      data: null,
+      roast: null,
+    };
   }
 }

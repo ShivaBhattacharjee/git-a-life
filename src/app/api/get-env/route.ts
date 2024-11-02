@@ -56,7 +56,7 @@ async function searchGitHubEnvFiles(username: string) {
   const config = {
     method: "GET",
     maxBodyLength: Infinity,
-    url: `https://api.github.com/search/code?q=filename:.env+user:${username}+NOT+filename:.env.example`,
+    url: `https://api.github.com/search/code?q=filename:.env+filename:.env.local+user:${username}+NOT+filename:.example+NOT+filename:.sample+NOT+filename:.template+NOT+filename:.development+NOT+filename:.dev+NOT+filename:.production+NOT+filename:.prod+NOT+filename:.test+NOT+filename:.staging+NOT+filename:.ci+NOT+filename:.qa+NOT+filename:.heroku+NOT+filename:.aws+NOT+filename:.azure+NOT+filename:.docker+NOT+filename:.backup+NOT+filename:.override+in:path`,
     headers: {
       Authorization: `token ${process.env.GITHUB_API_Key}`,
     },
