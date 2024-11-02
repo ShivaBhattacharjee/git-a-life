@@ -1,11 +1,4 @@
-<a href="https://github.com/ShivaBhattacharjee/git-a-life">
-<p align="center">
-  <img src="![image](https://static-00.iconduck.com/assets.00/git-icon-2048x2048-juzdf1l5.png)
-" height="150px"/>
-  </a>
-<br/>
-  <h3 align="center">Git a life</h3>
-
+<h3 align="center">Git a life</h3>
 
 <div align="center" >
 
