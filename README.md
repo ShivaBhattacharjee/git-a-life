@@ -51,7 +51,6 @@
 Git-a-life is built using NextJs 
 
 * [NextJS](https://nextjs.org)
-* [NextAuth](https://next-auth.js.org/)
 * [TailwindCss](https://tailwindcss.com/)
 
 
