@@ -14,6 +14,9 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(formData: FormData) {
+    if (!formData.get("username")) {
+      return setError("Please enter a username");
+    }
     try {
       const result = await getInfectedRepos(formData);
       setData(result.data);
@@ -93,7 +96,7 @@ export default function Page() {
           {roast && (
             <div className="mt-4 p-4 bg-white/5 rounded-md">
               <h3 className="text-lg font-semibold mb-2 font-mono">
-                Code Review:
+                Roast for you:
               </h3>
               <Markdown className="prose prose-invert font-mono">
                 {roast}
