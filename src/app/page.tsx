@@ -2,7 +2,11 @@
 
 import { getInfectedRepos } from "@/actions/getInfectedRepos";
 import { GitHubResponse } from "@/types";
-import { SearchIcon, Share2 } from "lucide-react";
+import {
+  Github,
+  SearchCode,
+  Share2,
+} from "lucide-react";
 import React, { useState } from "react";
 import { useFormStatus } from "react-dom";
 import Markdown from "react-markdown";
@@ -30,82 +34,90 @@ export default function Page() {
   }
 
   return (
-    <section className="flex p-4 justify-center  gap-5 items-center min-h-screen flex-col">
-      <h1 className="text-3xl md:text-6xl font-bold text-center">
-        Find hot envs near my <span className="text-purple-700">GIT</span>
-      </h1>
+    <>
+      <a href="https://github.com/shivabhattacharjee/git-a-life">
+        <Github className="m-6 float-right" size={35}/>
+      </a>
+      <section className="flex p-4 justify-center  gap-5 items-center min-h-[90vh] flex-col">
+        <h1 className="text-3xl md:text-6xl font-bold text-center">
+          Find hot envs near my{" "}
+          <span className="text-purple-700   font-Montserrat   lg:max-w-[800px] mb-3 md:max-w-[600px]  text-center font-bold bg-gradient-to-r from-purple-700 via-blue-300 to-cyan-600 text-transparent bg-clip-text animate-gradient">
+            GIT
+          </span>
+        </h1>
 
-      <form
-        action={handleSubmit}
-        className="w-full max-w-2xl flex flex-col gap-5"
-      >
-        <div className="relative w-full">
-          <input
-            type="text"
-            name="username"
-            className="bg-transparent rounded-md w-full p-4 focus:outline-none focus:ring-2 focus:ring-purple-600 border-2 border-white/10 focus:border-transparent font-bold placeholder:font-bold"
-            placeholder="Enter Your Github Username"
-          />
-        </div>
-
-        <SubmitButton />
-      </form>
-      {error && (
-        <p className=" bg-white/5 w-full max-w-2xl rounded-md p-6 space-y-4 text-red-600">
-          {error}
-        </p>
-      )}
-      {data && (
-        <div className="bg-white/5 w-full max-w-2xl rounded-md p-6 ">
-          <div className="float-right cursor-pointer">
-            <a
-              href="https://twitter.com/intent/tweet?text=Check%20out%20your%20exposed%20env%20variables%20on%20GitHub
-
-              https://git-a-life.theshiva.xyz"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Share2 />
-            </a>
+        <form
+          action={handleSubmit}
+          className="w-full max-w-2xl flex flex-col gap-5"
+        >
+          <div className="relative w-full">
+            <input
+              type="text"
+              name="username"
+              className="bg-transparent rounded-md w-full p-4 focus:outline-none focus:ring-2 focus:ring-purple-600 border-2 border-white/10 focus:border-transparent font-bold placeholder:font-bold"
+              placeholder="Enter Your Github Username"
+            />
           </div>
 
-          <h2 className="text-xl font-bold">
-            Total number of times you had skill issues: {data.total_count}
-          </h2>
+          <SubmitButton />
+        </form>
+        {error && (
+          <p className=" bg-white/5 w-full max-w-2xl rounded-md p-6 space-y-4 text-red-600">
+            {error}
+          </p>
+        )}
+        {data && (
+          <div className="bg-white/5 w-full max-w-2xl rounded-md p-6 ">
+            <div className="float-right cursor-pointer">
+              <a
+                href="https://twitter.com/intent/tweet?text=Check%20out%20your%20exposed%20env%20variables%20on%20GitHub
 
-          {data?.items?.length > 0 && (
-            <>
-              <h3 className="text-lg font-semibold">Exposed .env Files:</h3>
-              <ul>
-                {data?.items?.map((item) => (
-                  <li key={item.html_url} className="break-words">
-                    <a
-                      href={item.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-500 hover:text-blue-400 transition-colors"
-                    >
-                      {item.name} in {item.repository.full_name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {roast && (
-            <div className="mt-4 p-4 bg-white/5 rounded-md">
-              <h3 className="text-lg font-semibold mb-2 font-mono">
-                Roast for you:
-              </h3>
-              <Markdown className="prose prose-invert font-mono">
-                {roast}
-              </Markdown>
+              https://git-a-life.theshiva.xyz"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Share2 />
+              </a>
             </div>
-          )}
-        </div>
-      )}
-    </section>
+
+            <h2 className="text-xl font-bold">
+              Total number of times you had skill issues: {data.total_count}
+            </h2>
+
+            {data?.items?.length > 0 && (
+              <>
+                <h3 className="text-lg font-semibold">Exposed .env Files:</h3>
+                <ul>
+                  {data?.items?.map((item) => (
+                    <li key={item.html_url} className="break-words">
+                      <a
+                        href={item.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-500 hover:text-blue-400 transition-colors"
+                      >
+                        {item.name} in {item.repository.full_name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {roast && (
+              <div className="mt-4 p-4  opacity-80 rounded-md">
+                <h3 className="text-lg font-semibold mb-2 font-mono">
+                  Roast for you:
+                </h3>
+                <Markdown className="prose prose-invert font-mono">
+                  {roast}
+                </Markdown>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+    </>
   );
 }
 
@@ -125,7 +137,7 @@ function SubmitButton() {
         </span>
       ) : (
         <span className="flex items-center justify-center gap-4">
-          <SearchIcon />
+          <SearchCode />
           Search hot .envs
         </span>
       )}
